@@ -62,9 +62,7 @@ class Buddies extends React.Component{
         if(search.searchText !== null && search.searchText !== ''){
             buddies = search.searchResults
         }else {
-            buddies = valuesIn(friends).filter(friend => {
-                return friend.body.buddy
-            })
+            buddies = valuesIn(friends).filter(friend => {return friend.body.buddy})
         }
 
         return(

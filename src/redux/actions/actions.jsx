@@ -11,8 +11,6 @@ let axiosConfig = {
     }
 };
 
-
-
 export const logout = () => ({
     type: actionTypes.LOGOUT
 });
@@ -61,21 +59,3 @@ export function getCourses(payload) {
         })
     }
 }
-//
-// export function loginStudent(payload) {
-//     return {
-//         type: 'LOGIN_STUDENT',
-//         payload: new Promise((resolve, reject) => {
-//             axios.post('https://api.myqtab.com/auth/login/user',
-//                 {
-//                     username: payload.email,
-//                     password:payload.password
-//                 }
-//             )
-//                 .then(response => resolve(response.data))
-//                 .catch(error => reject(error))
-//         })
-//     }
-// }
-
-

@@ -47,7 +47,6 @@ class Dashboard extends React.Component{
            surname:this.state.surname,
            marrital_status:this.state.marrital_status
        }
-       console.log('PROFILE', profile)
        this.props.submitProfile(profile)
     }
     render(){
