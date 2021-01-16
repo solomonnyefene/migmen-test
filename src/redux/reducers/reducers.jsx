@@ -1,5 +1,6 @@
 
 import typeToReducer from 'type-to-reducer';
+import valuesIn from 'lodash/valuesIn'
 import * as actionTypes from './../actions/ActionType'
 
 
@@ -7,7 +8,12 @@ const INITIAL_STATE = {
     token:null,
     id:null,
     password:null,
-    friends:[]
+    friends:[],
+    isAddedBuddy:false,
+    search:{
+        searchText:null,
+        searchResults:null
+    }
 }
 
 const Reducer = typeToReducer({
@@ -26,7 +32,30 @@ const Reducer = typeToReducer({
         return {...state,
             token:'keepstate@gmail.com',
             id:state.id,
-            password:state.password
+            password:state.password,
+            isAddedBuddy:false
+        };
+    },
+
+    [actionTypes.SEARCH_BUDDY]: (state, action) => {
+        let searchText = action.payload,
+            buddies = valuesIn(state.friends).filter(buddy => {
+                return buddy.body.buddy
+            })
+
+        let searchResults = buddies.filter(buddy => {
+                return (
+                    buddy.body.buddy.first_name.toLowerCase().includes(searchText) ||
+                    buddy.body.buddy.surname.toLowerCase().includes(searchText)  ||
+                    buddy.body.buddy.marrital_status.toLowerCase().includes(searchText)
+                )
+            });
+        return {
+            ...state,
+            search: {
+                searchText: searchText,
+                searchResults: { ...searchResults }
+            }
         };
     },
 
@@ -50,20 +79,22 @@ const Reducer = typeToReducer({
         })
     },
     [actionTypes.SUBMIT_BUDDY]: {
-        PENDING: state => ({...state, isSubmittingBuddy:true}),
+        PENDING: state => ({...state, isSubmittingBuddy:true, isAddedBuddy:false}),
         FULFILLED: (state, action) => {
             let friends = state.friends,
                 updated_friends = [...friends, action.payload];
             return {
                 ...state,
                 friends:  updated_friends,
-                isSubmittingBuddy:false
+                isSubmittingBuddy:false,
+                isAddedBuddy:true
             };
         },
         REJECTED: (state, action) => ({
             ...state,
             errors: {...action.payload.errors},
-            isSubmittingBuddy:false
+            isSubmittingBuddy:false,
+            isAddedBuddy:false
 
         })
     },

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as actionTypes from  './ActionType'
+import {message} from 'antd'
 
 let axiosConfig = {
     headers: {
@@ -15,6 +16,10 @@ let axiosConfig = {
 export const logout = () => ({
     type: actionTypes.LOGOUT
 });
+export const searchBuddy = (text) => ({
+    type: actionTypes.SEARCH_BUDDY,
+     payload:text
+});
 export const login = (user) => ({
     type: actionTypes.LOGIN,
     payload:user
@@ -29,6 +34,7 @@ export function submitProfile(buddy) {
         payload: new Promise((resolve, reject) => {
             axios.post('https://echo-ll4dnfnzkq-uc.a.run.app/echo', {buddy})
                 .then(response => resolve(response.data))
+                .then(response => message.success('Buddy added successfully'))
                 .catch(error => reject(error))
         })
     }

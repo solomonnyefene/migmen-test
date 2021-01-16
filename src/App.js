@@ -13,6 +13,7 @@ import Routes from './redux/routes'
 //-----components-----
 import Login from './COMPONENTS/auth/Login'
 import Dashboard from './COMPONENTS/dashboard/Dashboard'
+import Buddies from './COMPONENTS/buddies/Buddies'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                 <Switch>
                     <Route exact path={Routes.login} component={Login} />
                     <Route path={Routes.dashboard} component={Dashboard} />
+                    <Route path={Routes.saved} component={Buddies} />
                 </Switch>
             </Router>
         </div>

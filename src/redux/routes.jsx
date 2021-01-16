@@ -1,6 +1,7 @@
 const Routes = {
     login: '/',
-    dashboard: '/dashboard'
+    dashboard: '/dashboard',
+    saved: '/saved'
 };
 
 export default Routes

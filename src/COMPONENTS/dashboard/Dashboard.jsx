@@ -1,7 +1,7 @@
 import './Dashboard.css'
 import React from 'react'
 import {connect} from 'react-redux'
-import {Redirect} from 'react-router-dom'
+import {Redirect, Link} from 'react-router-dom'
 import valuesIn from 'lodash/valuesIn'
 import Routes from './../../redux/routes'
 import Loader from 'react-loader-spinner'
@@ -15,6 +15,10 @@ import { UserOutlined } from '@ant-design/icons';
 
 //-----Actions-------
 import * as actions from './../../redux/actions/actions'
+
+//------components---
+import Buddies from './../buddies/Buddies'
+
 
 
 class Dashboard extends React.Component{
@@ -48,8 +52,10 @@ class Dashboard extends React.Component{
     }
     render(){
         let token = this.props.token,
-            session_token = sessionStorage.getItem('token')
+            session_token = sessionStorage.getItem('token'),
+            isAddedBuddy = this.props.isAddedBuddy;
         if(token === null){return <Redirect to={Routes.login}/>}
+        if(isAddedBuddy){return <Redirect to={Routes.saved}/>}
 
         const is_disabled =
                 this.first_name  === null ||
@@ -68,7 +74,11 @@ class Dashboard extends React.Component{
                        Dashboard
                    </div>
                     <div className="header-db-right">
-
+                         <span onClick={this.logout} style={{cursor:'pointer'}}>
+                             <Link to="/saved" style={{color:'#fff'}}>
+                                  Buddies&nbsp;&nbsp;&nbsp;&nbsp;
+                             </Link>
+                         </span>
                         <span onClick={this.logout} style={{cursor:'pointer'}}>
                            <Avatar icon={<UserOutlined />} />
                             &nbsp;
@@ -77,7 +87,7 @@ class Dashboard extends React.Component{
                     </div>
                </div>
                 <div className="row" style={{position:'relative', top: '100px'}}>
-                    <div className="col-lg-6">
+                    <div className="col-lg-12">
                         <div className="db-form-wrap">
                             {
                                 this.props.isSubmittingBuddy?
@@ -136,63 +146,6 @@ class Dashboard extends React.Component{
                             }
                         </div>
                     </div>
-                    <div className="col-lg-6 text-center">
-                       <div style={{marginTop:'40px', padding:'0px 40px  20px 20px'}}>
-                           <h3>
-                               {
-                                   this.props.isFetchingFriends? 'Fetching your buddies...'
-                                       :
-                                       <span>
-                                           Your buddies&nbsp;
-                                            <Badge count={valuesIn(buddies).length}>
-                                            </Badge>
-                                       </span>
-                               }
-                           </h3>
-                           {
-                               this.props.isFetchingFriends?
-                                   <Skeleton count={10}/>
-                                   :
-                                   <div className="table table-responsive">
-                                       <table className="table table-bordered">
-                                           <thead>
-                                           <tr style={{fontSize:'15px'}}>
-                                               <th style={{minWidth:'30px'}}>ID#</th>
-                                               <th style={{minWidth:'130px'}}>First name</th>
-                                               <th style={{minWidth:'100px'}}>Surname</th>
-                                               <th style={{minWidth:'100px'}}>Married?</th>
-                                           </tr>
-                                           </thead>
-                                           <tbody>
-                                           {
-                                               valuesIn(buddies).map((buddy) => {
-                                                   return(
-                                                       <tr style={{fontSize:'14px'}}>
-                                                           <th >{buddy.id}</th>
-                                                           <th >{buddy.body.buddy.first_name}</th>
-                                                           <th >{buddy.body.buddy.surname}</th>
-                                                           <th >
-                                                               {
-                                                                   buddy.body.buddy.marrital_status === 'married' &&
-                                                                       <Switch  defaultChecked/>
-                                                               }
-                                                               {
-                                                                   buddy.body.buddy.marrital_status === 'single' &&
-                                                                   <Switch  value={false}/>
-                                                               }
-                                                           </th>
-                                                       </tr>
-                                                   )
-                                               })
-                                           }
-
-                                           </tbody>
-                                       </table>
-                                   </div>
-                           }
-
-                       </div>
-                    </div>
                 </div>
 
             </div>
@@ -205,7 +158,8 @@ const mapStateToProps = state => ({
       token: state.main.token,
       friends:state.main.friends,
       isSubmittingBuddy:state.main.isSubmittingBuddy,
-      isFetchingFriends:state.main.isFetchingFriends
+      isFetchingFriends:state.main.isFetchingFriends,
+      isAddedBuddy:state.main.isAddedBuddy
 });
 
 const mapDispatchToProps = dispatch => {
